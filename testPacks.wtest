@@ -1,1 +1,55 @@
 // completar
+import packs.*
+
+describe "Primer tanda de tests." {
+    const packNacional1 = new PackNacional(duracionEnDias = 12, precioBase = 1000, provinciaDestino = "Mendoza", coordinadorACargo = coordinador1)
+    const coordinador1 = new Coordinador(cantidadViajesRealizados = 25, estaMotivado = true, aniosDeExperiencia = 5, rolAsignado = guia)
+    const beneficio1 = new Beneficio(tipo = "Seguro Adicional", costo = 100, estaVigente = true)
+    const beneficio2 = new Beneficio(tipo = "Traslado Privado", costo = 150, estaVigente = true)
+    const packInternacional1 = new PackInternacional(duracionEnDias = 25, precioBase = 3000, paisDestino = "Italia", cantidadEscalas = 0, esDeInteresTuristico = true, coordinadorACargo = coordinador2)
+    const coordinador2 = new Coordinador(cantidadViajesRealizados = 15, estaMotivado = false, aniosDeExperiencia = 2, rolAsignado = asistente)
+    const beneficio3 = new Beneficio(tipo = "Cena Especial", costo = 200, estaVigente = true)
+    const packProvincial1 = new PackProvincial(duracionEnDias = 15, precioBase = 2000, provinciaDestino = "Cordoba", coordinadorACargo = coordinador1, actividadesIncluidas = #{"Cata de vinos", "Tour por la ciudad", "Visita a museos", "Caminata por la montaña", "Paseo en bicicleta"}, cantidadDeCiudadesAVisitar = 6, beneficiosEspeciales = #{beneficio1, beneficio2, beneficio3})
+
+  test "Un pack nacional sin beneficios vigentes devuelve el mismo precio base." {
+    assert.equals(packNacional1.costoFinal(), 1000)
+  }
+  test "Un pack nacional con 2 beneficios vigentes suma correctamente sus costos al precio base." {
+    packNacional1.agregarBeneficio(beneficio1)
+    packNacional1.agregarBeneficio(beneficio2)
+    assert.equals(packNacional1.costoFinal(), 1250)
+  }
+  test "Un pack internacional sin beneficios vigentes calcula correctamente el total con el 20% de recargo." {
+    assert.equals(packInternacional1.costoFinal(), 3600)
+  }
+  //Tercera tanda de tests
+  test "Si el pack es nacional, las condiciones son:Tiene más de 10 días de duración y su coordinador es altamente calificado" {
+    assert.that(packNacional1.esPremium())
+  }
+  test "Si el pack es interancional, las condiciones son: Que sea un lugar de interés, Tiene más de 20 días de duración y No tiene ninguna escala" {
+    assert.that(packInternacional1.esPremium())
+  }
+  //Cuarta tanda de tests
+  test "Testear el pack premium." {
+    assert.that(packProvincial1.esPremium())
+  }
+  test "Precio" {
+    assert.equals(2572.5, packProvincial1.costoFinal())
+  }
+}
+
+describe "Segunda tanda de tests." {
+    const coordinador1 = new Coordinador(cantidadViajesRealizados = 21, estaMotivado = true, aniosDeExperiencia = 5, rolAsignado = guia)
+    const coordinador2 = new Coordinador(cantidadViajesRealizados = 30, estaMotivado = false, aniosDeExperiencia = 1, rolAsignado = asistente)
+    const coordinador3 = new Coordinador(cantidadViajesRealizados = 25, estaMotivado = true, aniosDeExperiencia = 1, rolAsignado = acompaniante)
+  test "Un guía motivado con 21 viajes realizados es considerado altamente calificado." {
+    assert.that(coordinador1.esAltamenteCalificado())
+  }
+  test "Un asistente desmotivado con 30 viajes realizados no es considerado altamente calificado." {
+    assert.notThat(coordinador2.esAltamenteCalificado())
+  }
+  test "Un acompañante con cualquier cantidad de viajes es siempre calificado si supera los 20." {
+    assert.that(coordinador3.esAltamenteCalificado())
+  }
+}
+
